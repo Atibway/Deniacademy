@@ -3,7 +3,6 @@ import { Banner } from '@/components/banner';
 import { currentUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import { VideoPlayer } from './_components/video-player';
 import { CourseEnrollButton } from './_components/CourseEnrollButton';
 import { Separator } from '@/components/ui/separator';
 import { Preview } from '@/components/preview';
@@ -58,15 +57,6 @@ const ChapterIdPage = async({
       )}
       <div className='flex flex-col mx-auto pb-20 max-w-4xl'>
         <div className='p-4'>
-          {/* <VideoPlayer
-            chapterId={params.chapterId}
-            title={chapter.title}
-            courseId={params.courseId}
-            nextChapterId={nextChapter?.id}
-            isLocked={isLocked}
-            completedOnEnd={completeOnEnd}
-            chapter={chapter}
-          /> */}
           <MagicUIvideo
           chapterId={params.chapterId}
           title={chapter.title}

@@ -5,8 +5,6 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 
 interface YouTubePlayerProps {
   videoId: string;
-  width?: number;
-  height?: number;
 }
 
 declare global {
@@ -16,9 +14,7 @@ declare global {
   }
 }
 
-const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
-  videoId,
-}) => {
+const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ videoId }) => {
   const playerRef = useRef<HTMLDivElement | null>(null);
   const [player, setPlayer] = useState<any>(null);
   const [isReady, setIsReady] = useState(false);
@@ -34,10 +30,10 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
         console.log("Initializing YouTube Player");
         const ytPlayer = new window.YT.Player(playerRef.current, {
           videoId,
-          width: "100%", 
+          width: "100%",
           height: "auto",
           playerVars: {
-            autoplay: 1, 
+            autoplay: 1,
             rel: 0,
             modestbranding: 1,
             controls: 1,
@@ -75,7 +71,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
         player.destroy();
       }
     };
-  }, [videoId]);
+  }, [videoId, onPlayerReady, player]); // ✅ Added missing dependencies
 
   return (
     <div className="relative aspect-video">
