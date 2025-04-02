@@ -43,11 +43,11 @@ export const getDashboardCourses = async (userId: string): Promise<DashboardCour
     });
 
 
-const price: number | null = 0 || undefined
+
     // Fetch free or cheap courses
     const freeCourses = await db.course.findMany({
       where: {
-        price: price,
+        price: 0,
         chapter: {
           some: {
             userProgress: {
@@ -75,6 +75,7 @@ const price: number | null = 0 || undefined
       },
     });
 
+console.log(freeCourses);
 
     // Combine purchased courses and free or cheap courses
     const allCourses = [
