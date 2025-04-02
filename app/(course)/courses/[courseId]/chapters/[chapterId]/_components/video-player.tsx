@@ -15,7 +15,7 @@ interface VideoPlayerProps {
   isLocked: boolean;
   title: string;
   chapter: Chapter;
-  setIsVideoOpen: Dispatch<SetStateAction<boolean>>;
+  setIsVideoOpen:Dispatch<SetStateAction<boolean>>
 }
 
 declare global {
@@ -31,7 +31,7 @@ export const VideoPlayer = ({
   nextChapterId,
   isLocked,
   chapter,
-  setIsVideoOpen,
+  setIsVideoOpen
 }: VideoPlayerProps) => {
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
@@ -41,41 +41,38 @@ export const VideoPlayer = ({
   const [player, setPlayer] = useState<any>(null);
 
   // Handle video state changes
-  const onPlayerStateChange = useCallback(
-    async (event: any) => {
-      if (event.data === window.YT.PlayerState.PAUSED) {
-        console.log("Video is paused! Stopping...");
-      }
-      if (event.data === window.YT.PlayerState.ENDED) {
-        console.log("Video has ended!");
-        try {
-          await axios.put(`/api/courses/${courseId}/chapters/${chapterId}/progress`, {
-            isCompleted: true,
-          });
+  const onPlayerStateChange = useCallback(async (event: any) => {
+    if (event.data === window.YT.PlayerState.PAUSED) {
+      console.log("Video is paused! Stopping...");
+    }
+    if (event.data === window.YT.PlayerState.ENDED) {
+      console.log("Video has ended!");
+      try {
+        await axios.put(`/api/courses/${courseId}/chapters/${chapterId}/progress`, {
+          isCompleted: true,
+        });
 
-          if (!nextChapterId) {
-            confetti.onOpen();
-            toast.success("Course Completed 'Great Job 👍'");
-          }
-          setIsVideoOpen(false);
-          router.refresh();
-
-          if (nextChapterId) {
-            setIsVideoOpen(false);
-            toast.success("Chapter Completed 'Great Job 👍'");
-            router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
-          }
-
-          console.log("onEnd --yes");
-        } catch (error) {
-          toast.error("Something went wrong");
-        } finally {
-          router.refresh();
+        if (!nextChapterId) {
+          confetti.onOpen();
+          toast.success("Course Completed 'Great Job 👍'");
         }
+        setIsVideoOpen(false)
+        router.refresh();
+
+        if (nextChapterId) {
+          setIsVideoOpen(false)
+          toast.success("Chapter Completed 'Great Job 👍'");
+          router.push(`/courses/${courseId}/chapters/${nextChapterId}`);
+        }
+
+        console.log("onEnd --yes");
+      } catch (error) {
+        toast.error("Something went wrong");
+      } finally {
+        router.refresh();
       }
-    },
-    [courseId, chapterId, nextChapterId, confetti, router, setIsVideoOpen]
-  );
+    }
+  }, [courseId, chapterId, nextChapterId, confetti, router]);
 
   // Video is ready
   const onPlayerReady = useCallback(() => {
@@ -84,6 +81,19 @@ export const VideoPlayer = ({
   }, []);
 
   useEffect(() => {
+    const loadYouTubeAPI = () => {
+      if (!window.YT) {
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        tag.async = true;
+        document.body.appendChild(tag);
+
+        window.onYouTubeIframeAPIReady = initializePlayer;
+      } else {
+        initializePlayer();
+      }
+    };
+
     const initializePlayer = () => {
       if (playerRef.current) {
         const ytPlayer = new window.YT.Player(playerRef.current, {
@@ -109,19 +119,6 @@ export const VideoPlayer = ({
       }
     };
 
-    const loadYouTubeAPI = () => {
-      if (!window.YT) {
-        const tag = document.createElement("script");
-        tag.src = "https://www.youtube.com/iframe_api";
-        tag.async = true;
-        document.body.appendChild(tag);
-
-        window.onYouTubeIframeAPIReady = initializePlayer;
-      } else {
-        initializePlayer();
-      }
-    };
-
     loadYouTubeAPI();
 
     return () => {
@@ -129,7 +126,7 @@ export const VideoPlayer = ({
         player.destroy();
       }
     };
-  }, [videoId, onPlayerReady, onPlayerStateChange, player]);
+  }, [videoId]);
 
   return (
     <div className="relative aspect-video">
@@ -146,7 +143,7 @@ export const VideoPlayer = ({
       )}
       {!isLocked && (
         <div>
-          <div ref={playerRef} id="youtube-player" className="w-full aspect-video" />
+             <div ref={playerRef} id="youtube-player" className="w-full aspect-video" />
         </div>
       )}
     </div>
