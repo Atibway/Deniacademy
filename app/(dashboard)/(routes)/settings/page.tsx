@@ -74,7 +74,7 @@ const onSubmit = (values: z.infer<typeof SettingsSchema>)=> {
 const handleSubmit = async(e: FormEvent<HTMLFormElement>)=> {
   e.preventDefault();
   try {
-    await axios.post("http://localhost:3000/api/subscribe", {
+    await axios.post("https://deniacademy.vercel.app/api/subscribe", {
       apiKey:process.env.NEXT_PUBLIC_API_KEY,
       email: value
     }).then((res)=> {
